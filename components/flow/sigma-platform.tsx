@@ -66,7 +66,7 @@ export function SigmaPlatform({
           <span aria-hidden="true" className="h-4 w-px bg-line" />
           <span className="flex items-center gap-1.5">
             <KubernetesMark />
-            <span className="font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-mute uppercase">
+            <span className="font-mono text-[11px] tracking-[0.14em] whitespace-nowrap text-mute uppercase">
               Kubernetes-native
             </span>
           </span>
@@ -83,7 +83,7 @@ export function SigmaPlatform({
             implied the workloads came out of it; in the toolbar it read as a
             page setting rather than part of that sentence. */}
         <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5">
-          <span className="font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-mute uppercase">
+          <span className="font-mono text-[11px] tracking-[0.14em] whitespace-nowrap text-mute uppercase">
             The Control Plane for GPUaaS
           </span>
           {children && (

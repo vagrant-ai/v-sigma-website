@@ -33,13 +33,18 @@ export function SiteIntro() {
     // the product's shape, these are claims about it.
     <section className="mt-8 border-t border-line/70 pt-8 pb-4">
       {/* Every other group on the page is labelled — WORKLOADS, HYPERSCALERS,
-          AVAILABILITY — so an unlabelled one was the odd column out. Takes the
-          mute-at-0.14em idiom the band and the legend use for a section label,
-          rather than the panels' ink-strong, which marks a column of data.
+          AVAILABILITY — so an unlabelled one was the odd column out.
+
+          Ink-strong, not the mute grey those labels use. Mute marks a caption on
+          a figure, which is what WORKLOADS and AVAILABILITY are; this is the
+          page's one section heading, and set in the caption colour it read as a
+          fourth caption. Keeps the wide 0.14em tracking, so it's still legible as
+          a label rather than as a title — ink-strong at 0.14em is a step the page
+          didn't already use for something else.
 
           An h2 and not a span: this is the page's only real heading under the
           screen-reader h1, so the outline was flat without it. */}
-      <h2 className="mb-7 text-center font-mono text-[11px] font-medium tracking-[0.14em] text-mute uppercase">
+      <h2 className="mb-7 text-center font-mono text-[12px] font-medium tracking-[0.14em] text-ink-strong uppercase">
         Features
       </h2>
 
@@ -74,14 +79,14 @@ export function SiteIntro() {
           >
             <span className="flex items-center gap-2.5">
               {icon}
-              <h3 className="font-mono text-[12px] font-medium tracking-[0.02em] text-ink-strong">
+              <h3 className="font-mono text-[13px] font-medium tracking-[0.02em] text-ink-strong">
                 {title}
               </h3>
             </span>
-            {/* 1.7 leading, looser than `leading-relaxed`. At 13px in a 3-up
+            {/* 1.7 leading, looser than `leading-relaxed`. At 14px in a 3-up
                 column the lines are short, and short measures need more space
                 between them to stop reading as a block. */}
-            <p className="text-[13px] leading-[1.7] text-mute">{body}</p>
+            <p className="text-[14px] leading-[1.7] text-mute">{body}</p>
           </li>
         ))}
       </ul>
@@ -99,7 +104,7 @@ export function SiteIntro() {
 const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
   {
     title: "Kubernetes Native",
-    body: "Annotations only for integration. The same experience as working with Kubernetes.",
+    body: "Annotations only for integration. The same Kubernetes experience as before.",
     icon: (
       <IconTile>
         <KubernetesMark />
@@ -153,7 +158,7 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
  */
 function Api({ children }: { children: ReactNode }) {
   return (
-    <span className="font-mono text-[12px] tracking-tight text-ink-strong/85">
+    <span className="font-mono text-[13px] tracking-tight text-ink-strong/85">
       {children}
     </span>
   );

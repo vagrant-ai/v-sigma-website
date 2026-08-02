@@ -28,7 +28,16 @@ export function Board() {
     // attached to the chrome above it rather than floating in the page. The
     // generous space belongs below it, around the diagram.
     <section className="mx-auto max-w-7xl px-6 pt-5 pb-10">
-      <div className="flex justify-end border-b border-line/70 pb-3.5">
+      {/* No rule under the switch. The header's own bottom border sits ~50px
+          above it and already divides chrome from content, so a second full-width
+          hairline made the switch read as a near-empty sub-header band of its
+          own. The switch is a segmented control with its own frame — it doesn't
+          need a rule to look attached to anything.
+
+          Nothing is lost in spacing either: both views open with their own top
+          gap (`pt-7` on the board, `mt-7` on the map), so the rule's `pb-3.5` was
+          never the thing holding them off the control. */}
+      <div className="flex justify-end">
         <ViewSwitch view={view} onChange={setView} />
       </div>
 

@@ -94,7 +94,7 @@ export function GlobalView({
               rather than floating above it. */}
           <div className="mb-3.5 flex items-center justify-between gap-3 border-b border-line/70 pb-3.5">
             <GpuPicker selectedId={gpuId} onSelect={onSelectGpu} />
-            <p className="font-mono text-[9px] tracking-[0.14em] whitespace-nowrap text-mute/60 uppercase">
+            <p className="font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-mute/60 uppercase">
               worldwide
             </p>
           </div>
@@ -207,7 +207,7 @@ export function GlobalView({
               marker encodes both at once, so splitting the two keys across the
               page would make the reader hunt for half the legend. */}
           <div className="mt-3 flex flex-wrap items-center justify-between gap-x-5 gap-y-2 border-t border-line/70 pt-3">
-            <div className="flex items-center gap-2 font-mono text-[9px] tracking-[0.14em] whitespace-nowrap text-mute/60 uppercase">
+            <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] whitespace-nowrap text-mute/60 uppercase">
               <span className="flex items-end gap-1">
                 {/* Roughly the on-screen size of the smallest, a middling, and
                     the largest marker. */}
@@ -228,7 +228,7 @@ export function GlobalView({
               not a third thing to decode. Says which channel is real and which
               is modelled, because they're mixed — size comes from the provider
               rosters, colour from the sampler. */}
-          <p className="mt-2 font-mono text-[9px] text-mute/60">
+          <p className="mt-2 font-mono text-[10px] text-mute/60">
             {rows.length} regions · {PROVIDERS.length} providers · availability illustrative
           </p>
         </div>
@@ -242,10 +242,10 @@ export function GlobalView({
               providers are things the region list actually knows. */}
           <div className="rounded-lg border border-line bg-surface/70 p-3">
             <div className="mb-2.5 flex items-baseline justify-between gap-2 border-b border-line/70 pb-2">
-              <span className="font-mono text-[9px] tracking-[0.18em] text-mute/80 uppercase">
+              <span className="font-mono text-[10px] tracking-[0.18em] text-mute/80 uppercase">
                 By area
               </span>
-              <span className="font-mono text-[9px] tracking-[0.14em] text-mute/60 uppercase">
+              <span className="font-mono text-[10px] tracking-[0.14em] text-mute/60 uppercase">
                 sites · providers
               </span>
             </div>
@@ -274,13 +274,13 @@ export function GlobalView({
                         />
                       ))}
                     </span>
-                    <span className="truncate font-mono text-[11px] text-ink-strong">
+                    <span className="truncate font-mono text-[12px] text-ink-strong">
                       {area.area}
                     </span>
                   </span>
                   {/* No bar: with counts this small the number is exact and a bar
                       would only re-encode it approximately. */}
-                  <span className="flex shrink-0 items-baseline gap-1 font-mono text-[10px] tabular-nums">
+                  <span className="flex shrink-0 items-baseline gap-1 font-mono text-[11px] tabular-nums">
                     <span className="text-ink-strong">{area.regions}</span>
                     <span className="text-mute/40">·</span>
                     <span className="text-mute/80">{area.providers}</span>
@@ -423,10 +423,10 @@ function RegionDetail({
     <div className="rounded-lg border border-line bg-surface/70 p-3">
       <div className="mb-2.5 flex items-baseline justify-between gap-2 border-b border-line/70 pb-2">
         <span className="flex min-w-0 items-baseline gap-2">
-          <span className="truncate font-mono text-[12px] font-medium tracking-tight text-ink-strong">
+          <span className="truncate font-mono text-[13px] font-medium tracking-tight text-ink-strong">
             {row.region.city}
           </span>
-          <span className="shrink-0 font-mono text-[9px] whitespace-nowrap text-mute/60">
+          <span className="shrink-0 font-mono text-[10px] whitespace-nowrap text-mute/60">
             {row.region.area}
           </span>
         </span>
@@ -440,17 +440,17 @@ function RegionDetail({
           known, so the number is derived rather than drawn. */}
       <dl className="mb-2.5 grid grid-cols-2 gap-x-2 gap-y-2">
         <div>
-          <dt className="font-mono text-[9px] tracking-[0.14em] text-mute/70 uppercase">
+          <dt className="font-mono text-[10px] tracking-[0.14em] text-mute/70 uppercase">
             Availability
           </dt>
           <dd className="mt-0.5 flex items-center gap-1.5">
             <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-sm ${AREA_DOT[status]}`} />
-            <span className="font-mono text-[11px] text-ink-strong">{STATUS_WORD[status]}</span>
+            <span className="font-mono text-[12px] text-ink-strong">{STATUS_WORD[status]}</span>
           </dd>
         </div>
         {km !== null && (
           <div>
-            <dt className="font-mono text-[9px] tracking-[0.14em] text-mute/70 uppercase">
+            <dt className="font-mono text-[10px] tracking-[0.14em] text-mute/70 uppercase">
               Latency
             </dt>
             {/* Rounded to 5 ms and prefixed "~": the model is good to maybe
@@ -463,7 +463,7 @@ function RegionDetail({
                 broadband — so a single-digit figure is below what the maths can
                 support. Matters here because the nearest region is often in the
                 reader's own metro, where the raw number came out as ~5ms. */}
-            <dd className="mt-0.5 font-mono text-[11px] text-ink-strong tabular-nums">
+            <dd className="mt-0.5 font-mono text-[12px] text-ink-strong tabular-nums">
               {estimateRttMs(km) < 10 ? "<10" : `~${Math.round(estimateRttMs(km) / 5) * 5}`}ms
               <span className="text-mute/70"> rtt</span>
             </dd>
@@ -472,7 +472,7 @@ function RegionDetail({
       </dl>
 
 
-      <div className="mb-1.5 font-mono text-[9px] tracking-[0.14em] text-mute/70 uppercase">
+      <div className="mb-1.5 font-mono text-[10px] tracking-[0.14em] text-mute/70 uppercase">
         {providers.length} providers
       </div>
       {/* Two-up: rosters run from two to six, and a single column made the panel
@@ -481,7 +481,7 @@ function RegionDetail({
         {providers.map((provider) => (
           <li key={provider.id} className="flex items-center gap-1.5">
             <ProviderMark provider={provider} className="h-3 w-3 shrink-0" />
-            <span className="truncate font-mono text-[10px] text-mute">{provider.name}</span>
+            <span className="truncate font-mono text-[11px] text-mute">{provider.name}</span>
           </li>
         ))}
       </ul>

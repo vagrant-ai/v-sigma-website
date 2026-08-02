@@ -56,7 +56,7 @@ export function ProviderIcon({ provider }: { provider: Provider }) {
       {Glyph ? (
         <Glyph />
       ) : (
-        <span className="font-mono text-[10px] leading-none font-semibold tracking-tight">
+        <span className="font-mono text-[11px] leading-none font-semibold tracking-tight">
           {monogramFor(provider)}
         </span>
       )}

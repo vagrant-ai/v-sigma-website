@@ -55,7 +55,7 @@ function Tab({
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`flex items-center gap-1.5 rounded px-2.5 py-1 font-mono text-[11px] tracking-tight transition-colors ${
+      className={`flex items-center gap-1.5 rounded px-2.5 py-1 font-mono text-[12px] tracking-tight transition-colors ${
         active
           ? "bg-surface font-medium text-sigma-ink shadow-[0_1px_2px_rgba(18,28,48,0.06)]"
           : "text-mute hover:text-ink-strong"

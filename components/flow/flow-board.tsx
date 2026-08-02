@@ -299,12 +299,12 @@ export function FlowBoard({
                       />
                       <span className={`h-1.5 w-1.5 rounded-sm ${PANEL_DOT[panel.status]}`} />
                     </span>
-                    <span className="font-mono text-[11px] font-medium tracking-[0.1em] text-ink-strong uppercase">
+                    <span className="font-mono text-[12px] font-medium tracking-[0.1em] text-ink-strong uppercase">
                       {panel.label}
                     </span>
                     <span className="sr-only">— {GROUP_LABEL[panel.status]}</span>
                   </div>
-                  <div className="font-mono text-[11px] text-mute/70 tabular-nums">
+                  <div className="font-mono text-[12px] text-mute/70 tabular-nums">
                     {panel.providers.length}
                   </div>
                 </div>

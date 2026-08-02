@@ -83,10 +83,10 @@ export function GpuPicker({
           open ? "border-sigma/60" : "border-line hover:border-mute/50"
         }`}
       >
-        <span className="font-mono text-[11px] font-medium tracking-tight text-ink-strong">
+        <span className="font-mono text-[12px] font-medium tracking-tight text-ink-strong">
           {selected.name}
         </span>
-        <span className="font-mono text-[9px] text-mute/70">{selected.memory}</span>
+        <span className="font-mono text-[10px] text-mute/70">{selected.memory}</span>
         <svg
           className={`h-2.5 w-2.5 shrink-0 text-mute transition-transform ${open ? "rotate-180" : ""}`}
           viewBox="0 0 12 12"
@@ -122,20 +122,20 @@ export function GpuPicker({
                 placeholder={`Search all ${GPUS.length} GPUs…`}
                 autoComplete="off"
                 aria-label="Search GPUs"
-                className="w-full rounded border border-line bg-ink-soft py-1.5 pr-2 pl-8 font-mono text-xs text-ink-strong placeholder:text-mute focus:border-sigma/60 focus:outline-none"
+                className="w-full rounded border border-line bg-ink-soft py-1.5 pr-2 pl-8 font-mono text-[13px] text-ink-strong placeholder:text-mute focus:border-sigma/60 focus:outline-none"
               />
             </div>
           </div>
 
           <div role="listbox" aria-label="GPU" className="max-h-72 overflow-y-auto p-1.5">
             {groups.length === 0 ? (
-              <p className="px-2 py-3 font-mono text-xs text-mute">
+              <p className="px-2 py-3 font-mono text-[13px] text-mute">
                 No accelerator matches “{query}”.
               </p>
             ) : (
               groups.map((group) => (
                 <div key={group.tier.id} className="mb-1 last:mb-0">
-                  <div className="px-2 pt-1.5 pb-1 font-mono text-[10px] tracking-wide text-mute uppercase">
+                  <div className="px-2 pt-1.5 pb-1 font-mono text-[11px] tracking-wide text-mute uppercase">
                     {group.tier.label}
                   </div>
                   {group.gpus.map((gpu) => (
@@ -152,7 +152,7 @@ export function GpuPicker({
           </div>
 
           {!searching && (
-            <div className="border-t border-line bg-ink-soft/60 px-3 py-2 font-mono text-[10px] text-mute">
+            <div className="border-t border-line bg-ink-soft/60 px-3 py-2 font-mono text-[11px] text-mute">
               Search to reach all {GPUS.length} accelerators
             </div>
           )}
@@ -183,8 +183,8 @@ function GpuOption({
           : "text-mute hover:bg-ink-soft hover:text-ink-strong"
       }`}
     >
-      <span className="font-mono text-xs">{gpu.name}</span>
-      <span className="shrink-0 font-mono text-[10px] opacity-70">
+      <span className="font-mono text-[13px]">{gpu.name}</span>
+      <span className="shrink-0 font-mono text-[11px] opacity-70">
         {gpu.vendor} · {gpu.memory}
       </span>
     </button>

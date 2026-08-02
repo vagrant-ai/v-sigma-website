@@ -62,11 +62,15 @@ export function ProviderCard({
       <ProviderIcon provider={provider} />
 
       <div className="min-w-0 flex-1">
+        {/* Held at 13px while the rest of the page moved up a step. The longest
+            name in the catalog ("Google Cloud") only just clears its column at
+            1024px, and this is a dense table row — sizing it like the prose
+            below the diagram would both clip it and overstate what it is. */}
         <div className="truncate font-mono text-[13px] font-medium tracking-tight text-ink-strong">
           {provider.name}
         </div>
         {provider.regions !== undefined && (
-          <div className="flex items-center gap-1 font-mono text-[10px] text-mute/80 tabular-nums">
+          <div className="flex items-center gap-1 font-mono text-[11px] text-mute/80 tabular-nums">
             <GlobeIcon />
             {provider.regions} regions
           </div>
@@ -75,9 +79,9 @@ export function ProviderCard({
 
       {/* Rate and round-trip are omitted for capacity you run yourself —
           v-sigma has no rate to quote and no third-party API to time. */}
-      <div className="shrink-0 text-right font-mono text-[10px] tabular-nums empty:hidden">
+      <div className="shrink-0 text-right font-mono text-[11px] tabular-nums empty:hidden">
         {availability.pricePerHour !== undefined && (
-          <div className="text-[11px] font-medium text-ink-strong/85">
+          <div className="text-[12px] font-medium text-ink-strong/85">
             ${availability.pricePerHour.toFixed(2)}
           </div>
         )}
