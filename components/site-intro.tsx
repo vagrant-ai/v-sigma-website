@@ -44,7 +44,7 @@ export function SiteIntro() {
 
           An h2 and not a span: this is the page's only real heading under the
           screen-reader h1, so the outline was flat without it. */}
-      <h2 className="mb-7 text-center font-mono text-[12px] font-medium tracking-[0.14em] text-ink-strong uppercase">
+      <h2 className="mb-7 text-center font-mono text-[13px] font-medium tracking-[0.14em] text-ink-strong uppercase">
         Features
       </h2>
 
@@ -79,14 +79,14 @@ export function SiteIntro() {
           >
             <span className="flex items-center gap-2.5">
               {icon}
-              <h3 className="font-mono text-[13px] font-medium tracking-[0.02em] text-ink-strong">
+              <h3 className="font-mono text-[14px] font-medium tracking-[0.02em] text-ink-strong">
                 {title}
               </h3>
             </span>
-            {/* 1.7 leading, looser than `leading-relaxed`. At 14px in a 3-up
+            {/* 1.7 leading, looser than `leading-relaxed`. At 15px in a 3-up
                 column the lines are short, and short measures need more space
                 between them to stop reading as a block. */}
-            <p className="text-[14px] leading-[1.7] text-mute">{body}</p>
+            <p className="text-[15px] leading-[1.7] text-mute">{body}</p>
           </li>
         ))}
       </ul>
@@ -138,7 +138,7 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
     ),
     icon: (
       <IconTile>
-        <ForkGlyph />
+        <SourceGlyph />
       </IconTile>
     ),
   },
@@ -158,7 +158,7 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
  */
 function Api({ children }: { children: ReactNode }) {
   return (
-    <span className="font-mono text-[13px] tracking-tight text-ink-strong/85">
+    <span className="font-mono text-[14px] tracking-tight text-ink-strong/85">
       {children}
     </span>
   );
@@ -235,29 +235,37 @@ function ConvergeGlyph() {
 }
 
 /**
- * A branch off a trunk — the fork, hence public code.
+ * Angle brackets around a slash — `</>`, source code you can read.
  *
- * The three nodes are filled discs, not rings: an unfilled 1.6-radius circle at
- * 14px has a hole about a third of a pixel wide, which renders as a grey blur
- * rather than a ring. Solid dots stay crisp.
+ * Third attempt, and the reasoning is worth keeping. A fork glyph came first,
+ * then the header gained a real GitHub mark and the fork became a hand-drawn
+ * echo of it. A padlock replaced it, but a lock's first reading is *security*,
+ * and an unlocked one at 14px is a lock with an odd shackle — a shape that has
+ * to be decoded before it says "open", and can land as the opposite.
+ *
+ * This one needs no decoding: `</>` is the universal mark for source, and source
+ * you can see is the claim. It also stays clear of the header, which is the whole
+ * reason the fork had to go.
+ *
+ * All strokes, and only three — at 14px each bracket is about 5px across, so the
+ * elbows need the full 1.4 weight and round joins to read as chevrons instead of
+ * blobs. The slash is set steeper than a text solidus to widen the gaps either
+ * side of it.
  */
-function ForkGlyph() {
+function SourceGlyph() {
   return (
     <svg
       className="h-3.5 w-3.5"
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.3"
+      strokeWidth="1.4"
       strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
     >
-      {/* Trunk down the left, one branch leaving it toward the upper right. */}
-      <path d="M4.4 5.2v5.6" />
-      <path d="M4.4 8.4h4.2c.9 0 1.4-.5 1.4-1.4V5.6" />
-      <circle cx="4.4" cy="3.6" r="1.5" fill="currentColor" stroke="none" />
-      <circle cx="10" cy="3.6" r="1.5" fill="currentColor" stroke="none" />
-      <circle cx="4.4" cy="12.4" r="1.5" fill="currentColor" stroke="none" />
+      <path d="M5.9 4.6L2.7 8l3.2 3.4" />
+      <path d="M10.1 4.6L13.3 8l-3.2 3.4" />
     </svg>
   );
 }
