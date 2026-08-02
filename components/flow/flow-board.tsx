@@ -73,9 +73,7 @@ const GROUP_LABEL: Record<AvailabilityStatus, string> = {
   none: "no availability",
 };
 
-export function FlowBoard() {
-  const [gpuId, setGpuId] = useState(DEFAULT_GPU.id);
-
+export function FlowBoard({ gpuId }: { gpuId: string }) {
   const availability = useMemo(() => sampleAvailability(gpuId), [gpuId]);
   const byProvider = useMemo(
     () => new Map<string, Availability>(availability.map((a) => [a.providerId, a])),
@@ -148,11 +146,9 @@ export function FlowBoard() {
 
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-10">
-      <BoardToolbar gpuId={gpuId} onSelectGpu={setGpuId} />
-
+    <>
       {/* One source, one rank of edges, three panels. */}
-      <div ref={containerRef} className="relative pt-12">
+      <div ref={containerRef} className="relative pt-7">
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
           width={size.width}
@@ -317,6 +313,6 @@ export function FlowBoard() {
           </div>
         </div>
       </div>
-    </section>
+    </>
   );
 }

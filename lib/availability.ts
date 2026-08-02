@@ -7,6 +7,7 @@ import {
   type Provider,
   type ProviderKind,
 } from "./data";
+import { lerp, rand } from "./seed";
 
 /**
  * Fake availability data, deterministic in (gpu, provider).
@@ -16,24 +17,6 @@ import {
  * around. When the real feed lands, replace `sampleAvailability` with the
  * fetch and keep the return shape.
  */
-
-function hash(seed: string): number {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < seed.length; i++) {
-    h ^= seed.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return h >>> 0;
-}
-
-/** Deterministic float in [0, 1) from a string seed. */
-function rand(seed: string): number {
-  let h = hash(seed);
-  h ^= h << 13;
-  h ^= h >>> 17;
-  h ^= h << 5;
-  return ((h >>> 0) % 100_000) / 100_000;
-}
 
 /** Price posture and API distance vary by provider kind. */
 const KIND_PROFILE: Record<
@@ -51,10 +34,6 @@ const KIND_PROFILE: Record<
   slurm: { supply: 1, priceFactor: 0, responseMin: 0, responseMax: 0 },
   other: { supply: 1, priceFactor: 0, responseMin: 0, responseMax: 0 },
 };
-
-function lerp(min: number, max: number, t: number): number {
-  return min + (max - min) * t;
-}
 
 function sampleOne(gpu: Gpu, provider: Provider): Availability {
   const kind = KIND_PROFILE[provider.kind];

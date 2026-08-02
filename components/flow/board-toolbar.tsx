@@ -31,13 +31,19 @@ export function BoardToolbar({
       {/* Pushed right, but as a labelled key rather than three loose words: at
           this distance from the diagram an unlabelled row of dots doesn't say
           what it's keying. */}
-      <div className="ml-auto flex items-center gap-2.5 rounded-md border border-line bg-surface/70 px-2.5 py-1.5">
-        <span className="font-mono text-[9px] tracking-[0.16em] whitespace-nowrap text-mute/80 uppercase">
+      {/* Same 30px height and radius as the picker and the switch, and the label
+          gets the picker's `gpu` treatment, so all three read as one bar. */}
+      <div className="ml-auto flex h-[30px] items-center gap-2 rounded-md border border-line bg-surface/70 px-2.5">
+        <span className="font-mono text-[9px] tracking-[0.12em] whitespace-nowrap text-mute/70 uppercase">
           Availability
         </span>
         <span aria-hidden="true" className="h-3 w-px bg-line" />
-        {/* Ordered high → low and spaced evenly, so it reads as one scale. */}
-        <div className="flex items-center gap-3">
+        {/* Ordered high → low so it reads as one scale. Compacted by dropping
+            type size and tracking rather than by abbreviating: three words at
+            full tracking made the key the widest control in the bar for the
+            least information in it, but "mod" for moderate saves a few pixels
+            at the cost of being a puzzle. */}
+        <div className="flex items-center gap-2">
           {(
             [
               ["bg-healthy", "high"],
@@ -47,7 +53,7 @@ export function BoardToolbar({
           ).map(([dot, label]) => (
             <span
               key={label}
-              className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap text-mute uppercase"
+              className="flex items-center gap-1 font-mono text-[9px] tracking-[0.06em] whitespace-nowrap text-mute uppercase"
             >
               <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-sm ${dot}`} />
               {label}

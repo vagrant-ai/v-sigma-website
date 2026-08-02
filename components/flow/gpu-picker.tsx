@@ -68,6 +68,9 @@ export function GpuPicker({
 
   return (
     <div ref={rootRef} className="relative">
+      {/* Metrics match ViewSwitch and the legend — same radius, same 30px height
+          — so the three controls in the toolbar read as one bar rather than as
+          unrelated widgets that happen to be adjacent. */}
       <button
         id="gpu-trigger"
         type="button"
@@ -75,15 +78,15 @@ export function GpuPicker({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`GPU: ${selected.name}`}
-        className={`flex items-center gap-2 rounded border bg-surface px-2.5 py-1.5 text-left transition-colors ${
+        className={`flex h-[30px] items-center gap-2 rounded-md border bg-surface px-2.5 text-left transition-colors ${
           open ? "border-sigma/60" : "border-line hover:border-mute/50"
         }`}
       >
-        <span className="font-mono text-[10px] tracking-[0.12em] text-mute uppercase">gpu</span>
-        <span className="font-mono text-[13px] font-medium tracking-tight text-ink-strong">
+        <span className="font-mono text-[9px] tracking-[0.16em] text-mute/80 uppercase">gpu</span>
+        <span className="font-mono text-[11px] font-medium tracking-tight text-ink-strong">
           {selected.name}
         </span>
-        <span className="font-mono text-[10px] text-mute/80">{selected.memory}</span>
+        <span className="font-mono text-[10px] text-mute/70">{selected.memory}</span>
         <svg
           className={`h-2.5 w-2.5 shrink-0 text-mute transition-transform ${open ? "rotate-180" : ""}`}
           viewBox="0 0 12 12"
