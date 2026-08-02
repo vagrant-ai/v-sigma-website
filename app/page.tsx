@@ -13,6 +13,8 @@ export default function Home() {
             for screen readers and document outline, which still need an h1. */}
         <h1 className="sr-only">v-sigma — the control plane for GPU as a Service</h1>
 
+        {/* The intro prose lives inside Board, not here: it's shown only on the
+            providers view, and Board owns which view is up. */}
         <Board />
       </main>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SiteIntro } from "@/components/site-intro";
 import { DEFAULT_GPU } from "@/lib/data";
 import { FlowBoard } from "./flow-board";
 import { GlobalView } from "./global-view";
@@ -32,7 +33,14 @@ export function Board() {
       </div>
 
       {view === "providers" ? (
-        <FlowBoard gpuId={gpuId} onSelectGpu={setGpuId} />
+        <>
+          <FlowBoard gpuId={gpuId} onSelectGpu={setGpuId} />
+          {/* Prose only on the providers view. It introduces the product, and
+              the providers view is the landing view — on the map it would sit
+              under a figure that's asking a different question, and a reader
+              switching views doesn't want to scroll past the pitch again. */}
+          <SiteIntro />
+        </>
       ) : (
         <GlobalView gpuId={gpuId} onSelectGpu={setGpuId} />
       )}
