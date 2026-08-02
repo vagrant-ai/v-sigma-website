@@ -68,10 +68,22 @@ export function GpuPicker({
 
   return (
     <div ref={rootRef} className="relative">
-      {/* Compact: 26px tall, and no `GPU` prefix. The label was there when this
-          sat in a bare toolbar and needed to name itself; inside the v-sigma
-          band the context is already given, so the prefix was three glyphs of
-          padding around the one thing that matters — the model name. */}
+      {/* Compact, and no `GPU` prefix. The label was there when this sat in a
+          bare toolbar and needed to name itself; inside the v-sigma band the
+          context is already given, so the prefix was three glyphs of padding
+          around the one thing that matters — the model name.
+
+          22px tall, down from 26, on `px-1.5` and `gap-1`. Every step is small
+          because this is a real control at the centre of the diagram: 22px is
+          about the floor for something clickable, and the row it sits in is the
+          band's second line, so shaving its height shortens the band the wires
+          anchor to. Below this, the next thing to give would be the memory chip
+          or the caret, and both are load-bearing — the chip distinguishes an H100
+          80GB from a 94GB, the caret is the only thing marking this as a menu
+          rather than a static label.
+
+          The `aria-label` carries the full reading, so nothing was lost to a
+          screen reader by tightening the visible text. */}
       <button
         id="gpu-trigger"
         type="button"
@@ -79,16 +91,21 @@ export function GpuPicker({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`GPU: ${selected.name}, ${selected.memory}`}
-        className={`flex h-[26px] items-center gap-1.5 rounded border bg-surface px-2 text-left transition-colors ${
+        className={`flex h-[22px] items-center gap-1 rounded border bg-surface px-1.5 text-left transition-colors ${
           open ? "border-sigma/60" : "border-line hover:border-mute/50"
         }`}
       >
-        <span className="font-mono text-[12px] font-medium tracking-tight text-ink-strong">
+        <span className="font-mono text-[11px] leading-none font-medium tracking-tight text-ink-strong">
           {selected.name}
         </span>
-        <span className="font-mono text-[10px] text-mute/70">{selected.memory}</span>
+        {/* Memory in a tint rather than beside the name in plain grey: at this
+            size the two runs of mono ran together into one string, and the model
+            is what you read first. */}
+        <span className="rounded-sm bg-ink-soft px-1 py-px font-mono text-[9px] leading-none text-mute">
+          {selected.memory}
+        </span>
         <svg
-          className={`h-2.5 w-2.5 shrink-0 text-mute transition-transform ${open ? "rotate-180" : ""}`}
+          className={`-mr-0.5 h-2.5 w-2.5 shrink-0 text-mute transition-transform ${open ? "rotate-180" : ""}`}
           viewBox="0 0 12 12"
           fill="none"
           stroke="currentColor"
@@ -99,12 +116,21 @@ export function GpuPicker({
         </svg>
       </button>
 
+      {/* The menu, scaled to match the 22px trigger: 224px wide (was 256), a
+          1.5px gap (was 2), and every inner step down one — search box, tier
+          labels, rows, footer. A menu that stays at its old scale under a control
+          you've shrunk reads as belonging to something else, and this one opens
+          in the middle of the diagram, where a large panel covers the wires it's
+          meant to be filtering.
+
+          `max-h-64` (was 72) for the same reason: 256px of scroller under a 22px
+          trigger was most of the diagram's height. */}
       {open && (
-        <div className="absolute z-30 mt-2 w-64 overflow-hidden rounded-md border border-line bg-surface shadow-xl shadow-slate-900/12">
-          <div className="border-b border-line p-2">
+        <div className="absolute z-30 mt-1.5 w-56 overflow-hidden rounded-md border border-line bg-surface shadow-lg shadow-slate-900/10">
+          <div className="border-b border-line p-1.5">
             <div className="relative">
               <svg
-                className="pointer-events-none absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-mute"
+                className="pointer-events-none absolute top-1/2 left-2 h-3 w-3 -translate-y-1/2 text-mute"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -114,28 +140,31 @@ export function GpuPicker({
                 <circle cx="6.75" cy="6.75" r="4.75" />
                 <path d="M10.5 10.5 L14 14" strokeLinecap="round" />
               </svg>
+              {/* Placeholder shortened with the box: "Search all 47 GPUs…" no
+                  longer fits at this width, and a truncated placeholder is worse
+                  than a shorter one. The count still appears in the footer. */}
               <input
                 ref={inputRef}
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`Search all ${GPUS.length} GPUs…`}
+                placeholder="Search GPUs…"
                 autoComplete="off"
-                aria-label="Search GPUs"
-                className="w-full rounded border border-line bg-ink-soft py-1.5 pr-2 pl-8 font-mono text-[13px] text-ink-strong placeholder:text-mute focus:border-sigma/60 focus:outline-none"
+                aria-label={`Search all ${GPUS.length} GPUs`}
+                className="w-full rounded border border-line bg-ink-soft py-1 pr-1.5 pl-7 font-mono text-[12px] text-ink-strong placeholder:text-mute focus:border-sigma/60 focus:outline-none"
               />
             </div>
           </div>
 
-          <div role="listbox" aria-label="GPU" className="max-h-72 overflow-y-auto p-1.5">
+          <div role="listbox" aria-label="GPU" className="max-h-64 overflow-y-auto p-1">
             {groups.length === 0 ? (
-              <p className="px-2 py-3 font-mono text-[13px] text-mute">
+              <p className="px-2 py-2.5 font-mono text-[12px] text-mute">
                 No accelerator matches “{query}”.
               </p>
             ) : (
               groups.map((group) => (
-                <div key={group.tier.id} className="mb-1 last:mb-0">
-                  <div className="px-2 pt-1.5 pb-1 font-mono text-[11px] tracking-wide text-mute uppercase">
+                <div key={group.tier.id} className="mb-0.5 last:mb-0">
+                  <div className="px-1.5 pt-1 pb-0.5 font-mono text-[10px] tracking-wide text-mute uppercase">
                     {group.tier.label}
                   </div>
                   {group.gpus.map((gpu) => (
@@ -152,7 +181,7 @@ export function GpuPicker({
           </div>
 
           {!searching && (
-            <div className="border-t border-line bg-ink-soft/60 px-3 py-2 font-mono text-[11px] text-mute">
+            <div className="border-t border-line bg-ink-soft/60 px-2.5 py-1.5 font-mono text-[10px] text-mute">
               Search to reach all {GPUS.length} accelerators
             </div>
           )}
@@ -162,6 +191,13 @@ export function GpuPicker({
   );
 }
 
+/**
+ * One row in the menu.
+ *
+ * `py-1` on a 2-unit gap, down from 1.5 and 3: the rows are what set the menu's
+ * height, so this is where scaling it down actually pays. Still ~26px tall, which
+ * keeps a comfortable pointer target even though the trigger above is 22.
+ */
 function GpuOption({
   gpu,
   selected,
@@ -177,14 +213,14 @@ function GpuOption({
       role="option"
       aria-selected={selected}
       onClick={() => onChoose(gpu.id)}
-      className={`flex w-full items-center justify-between gap-3 rounded px-2 py-1.5 text-left transition-colors ${
+      className={`flex w-full items-center justify-between gap-2 rounded px-1.5 py-1 text-left transition-colors ${
         selected
           ? "bg-sigma/10 font-medium text-sigma-ink"
           : "text-mute hover:bg-ink-soft hover:text-ink-strong"
       }`}
     >
-      <span className="font-mono text-[13px]">{gpu.name}</span>
-      <span className="shrink-0 font-mono text-[11px] opacity-70">
+      <span className="font-mono text-[12px]">{gpu.name}</span>
+      <span className="shrink-0 font-mono text-[10px] opacity-70">
         {gpu.vendor} · {gpu.memory}
       </span>
     </button>

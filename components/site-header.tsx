@@ -24,8 +24,14 @@ export function SiteHeader() {
             Σ
           </span>
           {/* The wordmark takes the vivid blue rather than the readable step:
-              a logotype is read as a mark, not as prose. */}
-          <span className="font-mono text-[15px] leading-none font-semibold tracking-[-0.02em] text-sigma">
+              a logotype is read as a mark, not as prose.
+
+              Orbitron, matching vagrant.ai's own `.brand`. Tracking goes to 0
+              from -0.02em: Orbitron is a wide face with generous built-in
+              sidebearings, and negative tracking on it closes the counters and
+              makes the wordmark look cramped rather than tight. vagrant.ai sets
+              `letter-spacing: 0` on its brand for the same reason. */}
+          <span className="font-brand text-[15px] leading-none font-semibold tracking-normal text-sigma">
             v-sigma
           </span>
         </a>

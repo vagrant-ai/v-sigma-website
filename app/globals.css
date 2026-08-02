@@ -20,18 +20,58 @@
   --color-sigma-ink: #2a5bd7;
   /* Hover step for solid sigma fills. */
   --color-sigma-strong: #2550b8;
+  /* The slogan's second accent, for `Intelligence` — the half of the line that
+     isn't infrastructure.
+
+     Burnt orange, and the warm end is the point: "spark" wants heat, and the
+     violet this replaced sat only 40° of hue from `sigma-ink`, so the two accents
+     read as two shades of blue rather than as two colours. At 17° this is 154°
+     from the blue — as close to its complement as the palette gets.
+
+     `orange-700`, one step lighter than the 800 it started at. This is close to
+     the floor for lightening it. The warm range is already spent on status here —
+     `tight` amber at 32°, `scarce` red at 0° — and only ~15° of hue separates any
+     orange from both, so hue can't keep them apart on its own; value has to. The
+     status dots are bright and small (amber 3.0:1, red 4.5:1). At 4.9:1 this is
+     still darker than the amber and much larger, so "bright small dot" reads as a
+     status and "display word" as a brand accent — but the gap is now narrow, and
+     `orange-600` (3.4:1, 11° off amber) would close it entirely.
+
+     4.9:1 clears AA for large text with room to spare, and sits just under
+     `sigma-ink`'s 5.5:1 — close enough that neither accent dominates the other in
+     the headline. Used once. */
+  --color-spark: #c2410c;
   /* Status colours picked for legibility on white, not for glow. */
   --color-healthy: #15a34a;
   --color-tight: #d97706;
   --color-scarce: #dc2626;
 
-  /* Loaded in app/layout.tsx via next/font, with system stacks as fallback. */
+  /* Loaded in app/layout.tsx via next/font, with system stacks as fallback.
+     Matches vagrant.ai: Roboto Mono for text, Orbitron for the brand.
+
+     `--font-sans` is a misnomer now and kept anyway — it's the token every
+     component already references for body text, and Tailwind derives `font-sans`
+     from it. Renaming it would touch every file to say the same thing. Read it
+     as "the text face", which on this site is a mono, exactly as it is on
+     vagrant.ai.
+
+     `--font-sans` and `--font-mono` are deliberately the same stack. The old
+     split (Inter vs JetBrains Mono) carried meaning — mono marked text that named
+     something exact, a GPU or a price or an API kind — and with a mono body face
+     that distinction can't be drawn by face any more. Both tokens resolve to
+     Roboto Mono rather than one of them being deleted, so the many `font-mono`
+     classes across the components keep working and keep documenting *why* that
+     text is set apart, even though the face no longer differs. Weight and colour
+     do that work now. */
   --font-sans:
-    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-  --font-mono:
-    var(--font-jetbrains-mono), ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco,
+    var(--font-roboto-mono), ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco,
     "Cascadia Mono", Consolas, monospace;
+  --font-mono:
+    var(--font-roboto-mono), ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco,
+    "Cascadia Mono", Consolas, monospace;
+  /* Orbitron, for the wordmark and the slogan only. Not wired to `body`. */
+  --font-brand:
+    var(--font-orbitron), "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
