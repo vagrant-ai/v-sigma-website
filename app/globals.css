@@ -20,27 +20,16 @@
   --color-sigma-ink: #2a5bd7;
   /* Hover step for solid sigma fills. */
   --color-sigma-strong: #2550b8;
-  /* The slogan's second accent, for `Intelligence` — the half of the line that
-     isn't infrastructure.
-
-     Burnt orange, and the warm end is the point: "spark" wants heat, and the
-     violet this replaced sat only 40° of hue from `sigma-ink`, so the two accents
-     read as two shades of blue rather than as two colours. At 17° this is 154°
-     from the blue — as close to its complement as the palette gets.
-
-     `orange-700`, one step lighter than the 800 it started at. This is close to
-     the floor for lightening it. The warm range is already spent on status here —
-     `tight` amber at 32°, `scarce` red at 0° — and only ~15° of hue separates any
-     orange from both, so hue can't keep them apart on its own; value has to. The
-     status dots are bright and small (amber 3.0:1, red 4.5:1). At 4.9:1 this is
-     still darker than the amber and much larger, so "bright small dot" reads as a
-     status and "display word" as a brand accent — but the gap is now narrow, and
-     `orange-600` (3.4:1, 11° off amber) would close it entirely.
-
-     4.9:1 clears AA for large text with room to spare, and sits just under
-     `sigma-ink`'s 5.5:1 — close enough that neither accent dominates the other in
-     the headline. Used once. */
-  --color-spark: #c2410c;
+  /* There was a `spark` accent here — a burnt orange for `Intelligence` in the
+     slogan, opposite the blue on `Compute`. It's gone: both nouns now take
+     `sigma-ink`. Worth knowing if a second display accent is ever proposed
+     again, because the palette makes it expensive. The warm range is already
+     spent on status (`tight` amber at 32°, `scarce` red at 0°), and only ~15° of
+     hue separates any orange from both, so hue alone can't hold a warm accent
+     apart from a status dot — only value can, which pins the accent to a narrow
+     dark band. Cool is no better: the nearest unused cool hues sit within ~40°
+     of `sigma-ink` and read as a second shade of blue rather than a second
+     colour. */
   /* Status colours picked for legibility on white, not for glow. */
   --color-healthy: #15a34a;
   --color-tight: #d97706;

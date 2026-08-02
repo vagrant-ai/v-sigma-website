@@ -63,12 +63,17 @@ export default function Home() {
 
               The two nouns are coloured and the two verbs left in ink, so the
               accents land on what the line is *about* rather than on what it
-              tells you to do. `sigma-ink` and not `sigma` for `Compute`: this is
-              prose to be read, which is exactly the split those two tokens
-              exist for. */}
+              tells you to do. `sigma-ink` and not `sigma`: this is prose to be
+              read, which is exactly the split those two tokens exist for.
+
+              Both nouns take the same accent. A second, warm accent on
+              `Intelligence` was tried and dropped: two colours in one short
+              line set the halves against each other, and the pair of them are
+              one claim, not a contrast. One accent, used twice, says "these two
+              words are the subject" — which is all the colour is here for. */}
           <h1 className="mx-auto max-w-3xl font-brand text-balance text-[26px] leading-[1.3] font-medium tracking-normal sm:text-[34px]">
             Scale <span className="text-sigma-ink">Compute</span>. Spark{" "}
-            <span className="text-spark">Intelligence</span>.
+            <span className="text-sigma-ink">Intelligence</span>.
           </h1>
         </section>
 
