@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { GitHubMark } from "@/components/github-mark";
 import { brandMark } from "@/lib/brand-marks";
 import { NEBULA } from "@/lib/links";
 
@@ -136,9 +137,33 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
         , licensed <Api>Apache-2.0</Api>. Public, and open to contribution.
       </>
     ),
+    /* The GitHub mark, the same glyph the header's repository link uses.
+     *
+     * Seven glyphs went in this slot before it. Six were rejected for saying
+     * something adjacent rather than the thing itself:
+     *
+     * - A fork, twice. It really means "you may copy this", and it read as a
+     *   worse-drawn version of the header's GitHub mark.
+     * - An open padlock. A lock reads as *security* first, and an unlocked one at
+     *   14px is a lock with an odd shackle — it can land as the opposite of the
+     *   point.
+     * - `</>`. Says "code", and all three cards here are about code. Marked the
+     *   category, not the feature.
+     * - Three nodes on a hub. Says "community" — a consequence of open source, not
+     *   the thing — and repeated ConvergeGlyph's shape two cards to the left.
+     * - A hand-drawn OSI keyhole in the site's line style. The right idea, but at
+     *   14px an open ring around a small bore and flare resolves to an "i" in a
+     *   circle. Verified in the browser.
+     * - The real OSI keyhole, vendored from `simple-icons`. Legible, and correct —
+     *   but it's the OSI's certification trademark, so it needed a caveat that
+     *   using it claims the licence is open source and not that OSI endorsed us.
+     *
+     * The repetition with the header is the cost, and it's the smaller one: the
+     * card's whole body is a link to that repository, so the mark names its
+     * destination instead of illustrating an abstraction. Nothing to decode. */
     icon: (
       <IconTile>
-        <SourceGlyph />
+        <GitHubMark className="h-3.5 w-3.5" />
       </IconTile>
     ),
   },
@@ -230,42 +255,6 @@ function ConvergeGlyph() {
       <path d="M2.6 3.4h2.4M2.6 8h2.4M2.6 12.6h2.4" />
       <path d="M5 3.4v9.2" />
       <path d="M5 8h8.4" />
-    </svg>
-  );
-}
-
-/**
- * Angle brackets around a slash — `</>`, source code you can read.
- *
- * Third attempt, and the reasoning is worth keeping. A fork glyph came first,
- * then the header gained a real GitHub mark and the fork became a hand-drawn
- * echo of it. A padlock replaced it, but a lock's first reading is *security*,
- * and an unlocked one at 14px is a lock with an odd shackle — a shape that has
- * to be decoded before it says "open", and can land as the opposite.
- *
- * This one needs no decoding: `</>` is the universal mark for source, and source
- * you can see is the claim. It also stays clear of the header, which is the whole
- * reason the fork had to go.
- *
- * All strokes, and only three — at 14px each bracket is about 5px across, so the
- * elbows need the full 1.4 weight and round joins to read as chevrons instead of
- * blobs. The slash is set steeper than a text solidus to widen the gaps either
- * side of it.
- */
-function SourceGlyph() {
-  return (
-    <svg
-      className="h-3.5 w-3.5"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M5.9 4.6L2.7 8l3.2 3.4" />
-      <path d="M10.1 4.6L13.3 8l-3.2 3.4" />
     </svg>
   );
 }

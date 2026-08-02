@@ -1,0 +1,25 @@
+<!--
+  The favicon: a bare Σ in the brand blue, no tile behind it.
+
+  Picked up automatically from `app/icon.svg` — no <link> tag needed.
+
+  Mid-blue rather than the site's ink, so the mark holds on both a light and a
+  dark tab strip without needing a background plate to sit on.
+
+  A stroked path, not <text>Σ</text>: favicons render with no access to the page's
+  webfont, so a text glyph would take whatever the platform has — a different
+  shape on every OS.
+
+  Stroke 2.6 on a 32 box, with round joins: at a 16px tab a hairline greys out,
+  and square vertices spike when the renderer snaps them to the pixel grid.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <path
+    d="M23 6H9l9 10-9 10h14"
+    fill="none"
+    stroke="#326ce5"
+    stroke-width="2.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
