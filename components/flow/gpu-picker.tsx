@@ -68,25 +68,25 @@ export function GpuPicker({
 
   return (
     <div ref={rootRef} className="relative">
-      {/* Metrics match ViewSwitch and the legend — same radius, same 30px height
-          — so the three controls in the toolbar read as one bar rather than as
-          unrelated widgets that happen to be adjacent. */}
+      {/* Compact: 26px tall, and no `GPU` prefix. The label was there when this
+          sat in a bare toolbar and needed to name itself; inside the v-sigma
+          band the context is already given, so the prefix was three glyphs of
+          padding around the one thing that matters — the model name. */}
       <button
         id="gpu-trigger"
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={`GPU: ${selected.name}`}
-        className={`flex h-[30px] items-center gap-2 rounded-md border bg-surface px-2.5 text-left transition-colors ${
+        aria-label={`GPU: ${selected.name}, ${selected.memory}`}
+        className={`flex h-[26px] items-center gap-1.5 rounded border bg-surface px-2 text-left transition-colors ${
           open ? "border-sigma/60" : "border-line hover:border-mute/50"
         }`}
       >
-        <span className="font-mono text-[9px] tracking-[0.16em] text-mute/80 uppercase">gpu</span>
         <span className="font-mono text-[11px] font-medium tracking-tight text-ink-strong">
           {selected.name}
         </span>
-        <span className="font-mono text-[10px] text-mute/70">{selected.memory}</span>
+        <span className="font-mono text-[9px] text-mute/70">{selected.memory}</span>
         <svg
           className={`h-2.5 w-2.5 shrink-0 text-mute transition-transform ${open ? "rotate-180" : ""}`}
           viewBox="0 0 12 12"

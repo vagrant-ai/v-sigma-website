@@ -13,8 +13,9 @@ import {
   type AvailabilityStatus,
   type Provider,
 } from "@/lib/data";
-import { BoardToolbar } from "./board-toolbar";
+import { AvailabilityKey } from "./availability-key";
 import { FlowChips } from "./flow-chip";
+import { GpuPicker } from "./gpu-picker";
 import { ProviderCard } from "./provider-card";
 import { SigmaPlatform } from "./sigma-platform";
 import { WorkloadBand } from "./workload-band";
@@ -73,7 +74,13 @@ const GROUP_LABEL: Record<AvailabilityStatus, string> = {
   none: "no availability",
 };
 
-export function FlowBoard({ gpuId }: { gpuId: string }) {
+export function FlowBoard({
+  gpuId,
+  onSelectGpu,
+}: {
+  gpuId: string;
+  onSelectGpu: (id: string) => void;
+}) {
   const availability = useMemo(() => sampleAvailability(gpuId), [gpuId]);
   const byProvider = useMemo(
     () => new Map<string, Availability>(availability.map((a) => [a.providerId, a])),
@@ -262,7 +269,9 @@ export function FlowBoard({ gpuId }: { gpuId: string }) {
           <WorkloadBand ref={registerNode("workloads")} />
 
           <div className="mt-11">
-            <SigmaPlatform ref={registerNode("sigma")} />
+            <SigmaPlatform ref={registerNode("sigma")}>
+              <GpuPicker selectedId={gpuId} onSelect={onSelectGpu} />
+            </SigmaPlatform>
           </div>
 
           {/* 4 columns: the long neocloud roster takes two, the short panels one each. */}
@@ -310,6 +319,14 @@ export function FlowBoard({ gpuId }: { gpuId: string }) {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Below the panels, not above them. The gap above is crossed by all
+              three drop wires end to end, so a key placed there overlaps the
+              flow wherever you put it — there is no clear lane. Here it reads as
+              a caption on the figure, still adjacent to the dots it keys. */}
+          <div className="mt-3.5 flex w-full justify-end pr-0.5">
+            <AvailabilityKey />
           </div>
         </div>
       </div>

@@ -5,11 +5,13 @@ import { lerp, rand } from "./seed";
  * Where GPU capacity physically sits, for the global view.
  *
  * These are real metros that real cloud regions cluster around, with real
- * coordinates — the geography is not invented. What *is* synthetic is which
- * providers and how much capacity each metro holds: no vendor publishes
- * per-region GPU inventory, so the figures below come from the same
- * deterministic sampler as the provider board. Treated as illustrative, not
- * quoted as fact anywhere in the UI.
+ * coordinates — the geography is not invented, and neither are the provider
+ * rosters. What *is* synthetic is the availability level, which comes from the
+ * same deterministic sampler as the provider board.
+ *
+ * Nothing here is a quantity. No vendor publishes per-region GPU inventory, so
+ * the view deals in what can be known: coordinates, who is present, and — via
+ * `latency.ts` — the round-trip time those coordinates imply.
  */
 export type Region = {
   id: string;
@@ -57,59 +59,75 @@ export function unknownProviderIds(): string[] {
   return [...new Set(REGIONS.flatMap((r) => r.providerIds))].filter((id) => !PROVIDER_IDS.has(id));
 }
 
-export type RegionCapacity = {
+export type RegionPresence = {
   region: Region;
   /**
-   * Relative amount of this GPU here, 0–1, normalised so the largest region on
-   * the map is 1. Relative on purpose: absolute GPU counts are not something
-   * providers publish, so a number would be a fabrication.
+   * How readily this GPU can be scheduled here, 0–1 — same scale as the board.
+   *
+   * A level and not a quantity, for the reason `Availability` gives in
+   * `data.ts`: nobody publishes node counts, so a level is the most this can
+   * honestly be. Note that even the level is sampled; only the geography and
+   * the provider rosters below are real.
    */
-  share: number;
-  /** How readily it can be scheduled here, 0–1 — same scale as the board. */
   level: number;
-  /** Providers offering this GPU in this region. */
+  /** Providers offering this GPU in this region. Real, from `REGIONS`. */
   providerIds: string[];
 };
 
 /**
- * Distribution of one GPU across the regions, largest first.
+ * Which regions offer one GPU, and how readily.
  *
- * Weighted by how many providers are present and nudged by the GPU's scarcity,
- * so flagship parts concentrate in a few big metros while commodity parts
- * spread out — which is how GPU supply actually behaves.
+ * Ordered by provider count — an actual property of the data rather than a
+ * sampled one — so the ordering means something even though the levels don't.
+ *
+ * There used to be a `share` and a `rank` here, sized from a seeded draw and
+ * shown as "#1 of 17" and "40% of supply". Both are gone: no provider publishes
+ * per-region inventory, so the numbers were invented, and casting an invention
+ * as a rank or a percentage only launders it — a reader has no way to tell that
+ * "#1 of 17" came from a random number generator. What's left is what the data
+ * supports: where capacity is, who offers it, and how easily it schedules.
  */
-export function sampleDistribution(gpuId: string): RegionCapacity[] {
-  const rows = REGIONS.map((region) => {
-    const key = `${gpuId}:${region.id}`;
-    const density = region.providerIds.length / 6;
-    return {
-      region,
-      weight: density * lerp(0.35, 1, rand(`share:${key}`)),
-      level: Math.round(lerp(0.08, 1, rand(`level:${key}`)) * 1000) / 1000,
-      providerIds: region.providerIds,
-    };
-  });
-
-  const peak = Math.max(...rows.map((r) => r.weight));
-  return rows
-    .map(({ weight, ...rest }) => ({
-      ...rest,
-      share: Math.round((weight / peak) * 1000) / 1000,
-    }))
-    .sort((a, b) => b.share - a.share);
+export function sampleDistribution(gpuId: string): RegionPresence[] {
+  return REGIONS.map((region) => ({
+    region,
+    level: Math.round(lerp(0.08, 1, rand(`level:${gpuId}:${region.id}`)) * 1000) / 1000,
+    providerIds: region.providerIds,
+  })).sort(
+    (a, b) =>
+      b.providerIds.length - a.providerIds.length || a.region.city.localeCompare(b.region.city),
+  );
 }
 
-/** Region count and mean availability per continent, for the map's summary. */
-export function summariseByArea(rows: RegionCapacity[]) {
-  const areas = new Map<Region["area"], RegionCapacity[]>();
+/**
+ * Per-continent roll-up: how many sites, how many distinct providers, how
+ * available. Ordered by site count.
+ *
+ * Counts, not proportions of supply — the number of sites and providers is
+ * something the region list actually knows, where a "share of supply" was a
+ * percentage of a fabricated total.
+ */
+export function summariseByArea(rows: RegionPresence[]) {
+  const areas = new Map<Region["area"], RegionPresence[]>();
   for (const row of rows) {
     const list = areas.get(row.region.area);
     if (list) list.push(row);
     else areas.set(row.region.area, [row]);
   }
-  return [...areas.entries()].map(([area, list]) => ({
-    area,
-    regions: list.length,
-    level: list.reduce((sum, r) => sum + r.level, 0) / list.length,
-  }));
+
+  return [...areas.entries()]
+    .map(([area, list]) => ({
+      area,
+      regions: list.length,
+      providers: new Set(list.flatMap((r) => r.providerIds)).size,
+      level: list.reduce((sum, r) => sum + r.level, 0) / list.length,
+      /**
+       * Each site's own level, worst first, for the sidebar's unit plot.
+       *
+       * The mean above flattens the thing worth seeing: an area with one dry
+       * metro and four healthy ones averages to "fine", and a reader picking a
+       * region cares that the dry one exists. Sorted so the worst dot leads.
+       */
+      levels: list.map((r) => r.level).sort((a, b) => a - b),
+    }))
+    .sort((a, b) => b.regions - a.regions || b.providers - a.providers);
 }

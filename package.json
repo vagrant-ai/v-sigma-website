@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "generate:map": "node scripts/generate-world-map.mjs"
   },
   "dependencies": {
     "next": "16.2.12",
@@ -17,12 +18,18 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
+    "@types/d3-geo": "^3.1.1",
     "@types/node": "26.1.2",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
+    "@types/topojson-client": "^3.1.5",
+    "d3-geo": "^3.1.1",
     "postcss": "8.5.25",
     "tailwindcss": "4.3.3",
+    "topojson-client": "^3.1.0",
+    "topojson-simplify": "^3.0.3",
     "typescript": "5.9.3",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "world-atlas": "^2.0.2"
   }
 }

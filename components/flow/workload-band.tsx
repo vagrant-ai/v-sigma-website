@@ -17,7 +17,7 @@ export function WorkloadBand({ ref }: { ref: (el: HTMLElement | null) => void })
           make this the tallest thing in the layout for the least information. */}
       <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
         <span className="font-mono text-[11px] font-medium tracking-[0.14em] whitespace-nowrap text-mute uppercase">
-          Your workloads
+          Workloads
         </span>
         <span aria-hidden="true" className="h-3.5 w-px bg-line" />
 
