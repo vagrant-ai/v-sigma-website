@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+@theme {
+  /* Light surfaces, three steps: page → panel → card. The page is a faintly
+     cool white so the sky-blue brand and the status dots sit in a related
+     hue rather than on pure #fff. */
+  --color-ink: #f6f8fc;
+  --color-ink-soft: #edf1f8;
+  --color-surface: #ffffff;
+  --color-line: #d7dfec;
+  --color-ink-strong: #121c30;
+  --color-mute: #5d6a83;
+  /* v-sigma's brand colour is Kubernetes blue, split in two so brightness and
+     legibility don't have to trade off:
+     - `sigma` is the mark itself, #326ce5, for borders, tints, icons and the
+       diagram. At 4.8:1 on white it is readable, but keep prose off it.
+     - `sigma-ink` is the darker step (5.9:1), for the wordmark, the node
+       label, links and anything else that has to be *read*. */
+  --color-sigma: #326ce5;
+  --color-sigma-ink: #2a5bd7;
+  /* Hover step for solid sigma fills. */
+  --color-sigma-strong: #2550b8;
+  /* Status colours picked for legibility on white, not for glow. */
+  --color-healthy: #15a34a;
+  --color-tight: #d97706;
+  --color-scarce: #dc2626;
+
+  /* Loaded in app/layout.tsx via next/font, with system stacks as fallback. */
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco,
+    "Cascadia Mono", Consolas, monospace;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  /* A faint ocean-blue wash behind the diagram, fading into the base white. */
+  background:
+    radial-gradient(90rem 44rem at 50% -14rem, rgba(50, 108, 229, 0.1), transparent 70%),
+    var(--color-ink);
+  background-attachment: fixed;
+  color: var(--color-ink-strong);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Packets travelling along an edge from v-sigma out to a provider. */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.flow-packets {
+  stroke-dasharray: 2 10;
+  /* The keyframe shifts 24 units — two full 12-unit dash cycles — so this runs
+     the data at 48px/s. Quick enough to read as live traffic rather than a
+     crawl. `FLOW_PX_PER_SEC` in flow-board.tsx paces the provider chips to the
+     same figure, so a chip rides along with the data instead of drifting
+     through it; change one and you must change the other. */
+  animation: flow-dash 0.5s linear infinite;
+}
+
+/* A provider's mark riding the same edge as the dashes — the request v-sigma is
+   placing, made literal. `--flow-path` is set per edge from the same `d` the
+   stroke uses, so the chip tracks the wire exactly. */
+/* Travel occupies only the first 70% of the cycle; the rest is the chip parked
+   invisibly at the far end. That splits two things a single duration would
+   conflate: how fast a chip crosses the wire (the travel segment) and how often
+   one is emitted (the whole cycle). A smaller fraction here spaces the traffic
+   out further without slowing anything down.
+
+   Mirrored by `CHIP_TRAVEL_FRACTION` in flow-board.tsx, which sizes each edge's
+   duration so the travel segment works out to 48px/s — the dash speed. Change
+   this and you must change that. */
+@keyframes flow-chip {
+  0% {
+    offset-distance: 0%;
+  }
+  70%,
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+/* Visible only while travelling, and faded at both ends so a chip doesn't pop
+   into being on top of a node. Held at zero through the idle tail. */
+@keyframes flow-chip-fade {
+  0% {
+    opacity: 0;
+  }
+  12%,
+  58% {
+    opacity: 0.95;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.flow-chip {
+  offset-path: var(--flow-path);
+  /* Upright the whole way: these are logos, and a rotating logo is unreadable
+     (and, for a brand mark, wrong). */
+  offset-rotate: 0deg;
+  /* Centre the box on the path rather than hanging it off its top-left. */
+  offset-anchor: 50% 50%;
+  animation:
+    flow-chip var(--flow-dur, 3.2s) linear infinite,
+    flow-chip-fade var(--flow-dur, 3.2s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+}
+
+/* The halo behind a live provider's status dot. Scale only — the dot itself
+   holds still, so the row's position never shifts. */
+@keyframes status-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.55;
+  }
+}
+
+.status-pulse {
+  animation: status-pulse 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-packets,
+  .status-pulse {
+    animation: none;
+  }
+
+  /* Nothing travels, so the chips have no meaning — and a chip parked at the
+     source would read as a stray glyph. */
+  .flow-chip {
+    display: none;
+  }
+}
