@@ -114,7 +114,7 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
   },
   {
     title: "One API, Run Everywhere",
-    body: "Hyperscalers, neoclouds and self-managed hardware behind a single interface.",
+    body: "Hyperscalers, neoclouds and self-managed infrastructure behind a single interface.",
     icon: (
       <IconTile>
         <ConvergeGlyph />
