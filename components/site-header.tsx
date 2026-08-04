@@ -1,5 +1,5 @@
 import { GitHubMark } from "@/components/github-mark";
-import { NEBULA, VAGRANT_URL } from "@/lib/links";
+import { VAGRANT_GITHUB, VAGRANT_URL } from "@/lib/links";
 
 /**
  * Flat, technical header: monospace throughout, hairline rules, no tiles or
@@ -42,22 +42,26 @@ export function SiteHeader() {
 
         <span className="font-mono text-[12px] tracking-wide text-mute">
           by{" "}
-          {/* A faint but always-visible underline: a hover-only one only helps
-              people who already suspect it's a link. */}
+          {/* No underline, at rest or on hover. The name is a full colour step
+              darker than the `by` beside it (ink-strong/75 against mute), which
+              is what sets it apart as the field's value at rest; on hover the
+              pointer cursor has already answered "is this a link", so a rule
+              under the text would be a third signal after the cursor and the
+              colour. Hover is colour alone. */}
           <a
             href={VAGRANT_URL}
-            className="text-ink-strong/75 underline decoration-mute/40 decoration-1 underline-offset-[3px] transition-colors hover:text-sigma-ink hover:decoration-sigma-ink"
+            className="text-ink-strong/75 transition-colors hover:text-sigma-ink"
           >
             Vagrant.ai
           </a>
         </span>
 
-        {/* Pushes the repository link to the right edge. `ml-auto` rather than a
+        {/* Pushes the GitHub link to the right edge. `ml-auto` rather than a
             `justify-between` on the bar: the wordmark, the rule and the byline
             are one cluster that has to stay tight, and space-between would have
             spread all four apart. */}
         <a
-          href={NEBULA.url}
+          href={VAGRANT_GITHUB.url}
           target="_blank"
           rel="noreferrer"
           // A square hit area, not just the 16px glyph: 32px is the smallest
@@ -66,9 +70,9 @@ export function SiteHeader() {
           // doesn't read as the header being inset further than the content.
           className="-mr-2 ml-auto flex h-8 w-8 items-center justify-center rounded text-mute transition-colors hover:bg-ink-soft hover:text-ink-strong"
           // Names the destination rather than the icon: "GitHub" alone would
-          // leave a screen reader to guess which repository, and there's only one
-          // this could be.
-          aria-label={`${NEBULA.name} on GitHub`}
+          // leave a screen reader to guess whose GitHub, and the byline beside it
+          // has already established who the site is by.
+          aria-label={`${VAGRANT_GITHUB.name} on GitHub`}
         >
           <GitHubMark className="h-4 w-4" />
         </a>

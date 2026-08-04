@@ -146,6 +146,68 @@ body {
   animation-delay: var(--flow-delay, 0s);
 }
 
+/* Workloads arriving, one at a time — the demand side's counterpart to the
+   packets on the wires below.
+
+   Colour only, no transform and no opacity floor: the band is a row of text, and
+   anything that moved or dimmed a label would either shift the row or make it
+   momentarily unreadable. Each label warms to the brand blue and settles back to
+   its resting ink, so at any moment one workload is "the one being placed" and
+   the rest are still legible.
+
+   The lit window is short — 14% of the cycle, with a long ease back — so this
+   reads as a scan passing through rather than five labels blinking. `.workloads`
+   sets `--workload-cycle` and each label takes a fraction of it as a delay, so
+   the highlight travels left to right in DOM order.
+
+   Resting colour is written out rather than inherited: an animation that only
+   names its lit state would return to whatever `color` the element had, and
+   Tailwind's `text-ink-strong/85` is a computed color-mix that the keyframe can't
+   round-trip cleanly. This keeps both ends explicit. */
+@keyframes workload-scan {
+  /* Rest, rise, hold, fall, rest. The shape matters more than the endpoints:
+     an instant switch to blue and a slow fade back reads as a blink with a
+     tail — the eye catches the hard edge and the decay just looks like the
+     label recovering. Easing *in* to the highlight over 5% and out of it over
+     18% gives the pass a direction, so it reads as something moving through
+     the row rather than five labels taking turns lighting up.
+
+     The fall is ~3.5× the rise. Symmetric, it pulses; weighted this way there's
+     a leading edge and a wake, which is the same asymmetry that makes the
+     packet dashes on the wires below read as travelling in a direction.
+
+     Only 28% of the cycle has any colour in it at all. With five labels spaced a
+     fifth of the cycle apart, that keeps a single label lit at a time with a
+     clear dark beat between passes — the restraint is what makes it elegant
+     rather than busy. */
+  0% {
+    color: var(--workload-rest);
+  }
+  5%,
+  10% {
+    color: var(--color-sigma);
+  }
+  28%,
+  100% {
+    color: var(--workload-rest);
+  }
+}
+
+.workload-scan {
+  /* The resting colour, as a variable so the keyframe has something to return to
+     that isn't hardcoded. It's `text-ink-strong/85` expressed the way Tailwind
+     itself computes that class, so the two can't drift: an earlier version
+     inlined `rgb(18 28 48 / 0.85)`, which silently pinned the label to a literal
+     the palette no longer controlled. */
+  --workload-rest: color-mix(in oklab, var(--color-ink-strong) 85%, transparent);
+  /* `linear` on purpose. The keyframe already carries the whole envelope in its
+     stop placement, and layering an ease on top of hand-placed stops eases each
+     *segment* separately — which flattens the rise and the fall toward each
+     other and undoes the asymmetry above. */
+  animation: workload-scan var(--workload-cycle, 4s) linear infinite;
+  animation-delay: var(--workload-delay, 0s);
+}
+
 /* The halo behind a live provider's status dot. Scale only — the dot itself
    holds still, so the row's position never shifts. */
 @keyframes status-pulse {
@@ -174,5 +236,11 @@ body {
      source would read as a stray glyph. */
   .flow-chip {
     display: none;
+  }
+
+  /* The labels stay at their resting ink. Unlike the chips this needs no
+     `display` change — the text is the content, not a decoration of it. */
+  .workload-scan {
+    animation: none;
   }
 }

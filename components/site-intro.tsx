@@ -44,8 +44,27 @@ export function SiteIntro() {
           didn't already use for something else.
 
           An h2 and not a span: this is the page's only real heading under the
-          screen-reader h1, so the outline was flat without it. */}
-      <h2 className="mb-7 text-center font-mono text-[13px] font-medium tracking-[0.14em] text-ink-strong uppercase">
+          screen-reader h1, so the outline was flat without it.
+
+          14px, and that number is set by the page's label scale rather than
+          picked. Every uppercase label here lives in a 10–12px band — the panel
+          headings (HYPERSCALERS, NEOCLOUDS) at 12px, WORKLOADS at 12, the
+          AVAILABILITY key at 10 — so this heading has exactly two constraints: it
+          must sit above the 12px panel headings it outranks, and it must stay
+          inside the register those labels establish. 14 is the first step that
+          does both.
+
+          The sizes either side were both wrong, in opposite directions. 13 put it
+          *below* the card titles it governs, so nothing said "heading". 15 and 18
+          left the label band entirely: caps at 0.14em accumulate width fast, and
+          past 14 they compound into something that reads as a second title
+          competing with the 26px h1 rather than as a divider between sections.
+
+          It shares 14px with the card titles below it and stays distinct anyway —
+          those are sentence case at 0.02em tracking, this is caps at 0.14em. On
+          this page the label register is carried by caps and tracking, not by
+          size, which is exactly why size is the wrong lever to reach for here. */}
+      <h2 className="mb-7 text-center font-mono text-[14px] font-medium tracking-[0.14em] text-ink-strong uppercase">
         Features
       </h2>
 
@@ -74,9 +93,17 @@ export function SiteIntro() {
              first and last columns sit flush to the rail the diagram uses. With
              no fill to inset from, vertical padding was just space added to space
              the section margins already provide. */
+          /* `gap-4` (16px) between the title row and the body, up from 10px. Two
+             reasons it needed more than it looks like it should: the body dropped
+             from 15px to 13px, and a smaller paragraph needs more air above it to
+             stay a separate block rather than a continuation of the line above;
+             and the body's 1.7 leading means its own lines sit ~22px apart, so at
+             10px the title was closer to the first line of copy than that line was
+             to the second. The gap above a block has to beat the leading inside
+             it, or the title reads as part of the paragraph. */
           <li
             key={title}
-            className="flex flex-col gap-2.5 md:px-7 md:first:pl-0 md:last:pr-0"
+            className="flex flex-col gap-4 md:px-7 md:first:pl-0 md:last:pr-0"
           >
             <span className="flex items-center gap-2.5">
               {icon}
@@ -84,10 +111,42 @@ export function SiteIntro() {
                 {title}
               </h3>
             </span>
-            {/* 1.7 leading, looser than `leading-relaxed`. At 15px in a 3-up
-                column the lines are short, and short measures need more space
-                between them to stop reading as a block. */}
-            <p className="text-[15px] leading-[1.7] text-mute">{body}</p>
+            {/* 13px, down from 15. At 15 this body copy was set *larger* than the
+                14px title above it, so each cell was upside down: the sentence
+                you read second, and only in passing, carried more weight than the
+                feature's name. Colour was doing the whole hierarchy on its own
+                (mute against ink-strong) while size actively fought it.
+
+                13 rather than 14, so the step is unambiguous — matched to the
+                title it would read as one continuous block of text at two
+                colours, which is roughly the problem it has now.
+
+                `font-mono` is declared rather than left to inherit. It was
+                inheriting `--font-sans` from `body`, which resolves to the same
+                Roboto Mono stack — so the face was already identical to the
+                workload labels and the card titles, but only because both tokens
+                happen to point at one stack today. globals.css says that split
+                may be redrawn, and if it ever is, this paragraph is the one piece
+                of the section that would silently change face while everything
+                around it held. Saying `font-mono` costs nothing and makes the
+                match a declaration instead of a coincidence.
+
+                Weight stays at the inherited 400, and that's the one thing here
+                deliberately *unlike* the workload labels, which are 500. Those are
+                labels — a label is a fixed token you scan for, and 500 is what
+                makes one hold its own at 12px. This is a sentence you read, and
+                its weight has a second job: it's the only thing separating the
+                body from the 14px/500 title directly above it, since 13 against 14
+                is barely a size step. At 500 each cell read flat — title and body
+                in one voice — and `mute` grey at 500 is heavier than body copy
+                should be at this size. Matching the band exactly was tried and is
+                what showed that up.
+
+                1.7 leading, looser than `leading-relaxed`. In a 3-up column the
+                lines are short, and short measures need more space between them
+                to stop reading as a block — more so now that the text is
+                smaller. */}
+            <p className="font-mono text-[13px] leading-[1.7] text-mute">{body}</p>
           </li>
         ))}
       </ul>
@@ -180,10 +239,17 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
  *
  * Not a `<code>`: these are names in a sentence, not code you could run, and
  * `<code>` would say otherwise to a screen reader.
+ *
+ * Sized to the prose it sits in (13px), not a step above it. It was 14px against
+ * 15px body copy, which read as roughly level; left at 14 once the body dropped
+ * to 13 it would be visibly *larger* than the sentence containing it, which is
+ * not what an inline noun should do. Darker ink and tighter tracking set it apart
+ * — the same two levers the page uses everywhere else, and neither of them
+ * disturbs the line.
  */
 function Api({ children }: { children: ReactNode }) {
   return (
-    <span className="font-mono text-[14px] tracking-tight text-ink-strong/85">
+    <span className="font-mono text-[13px] tracking-tight text-ink-strong/85">
       {children}
     </span>
   );

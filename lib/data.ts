@@ -109,13 +109,27 @@ export const PROVIDERS: Provider[] = [
  * Deliberately generic categories rather than named frameworks: v-sigma
  * schedules the GPU, it doesn't care whether the training job is PyTorch or
  * JAX, and listing logos here would imply integrations we haven't claimed.
+ *
+ * Labels only. Two things have been tried in a second field beside each one and
+ * both were removed: a prose gloss ("multi-node runs", "served endpoints"), which
+ * roughly doubled the band's width to describe categories that need no
+ * describing; and the Kubernetes kind each arrives as (`Deployment`, `Job`),
+ * which was accurate but put API detail in the diagram's lightest layer, where
+ * the reader is still being told what the picture *is*.
+ *
+ * So: five nouns, nothing else. This band is a list of what you point at
+ * v-sigma, and a list wants to be scanned. The Kubernetes claim is made in the
+ * Features section, in a sentence, which is where it reads.
+ *
+ * Five is the cap. A sixth would wrap the band at tablet widths, and the band is
+ * one centred row by design.
  */
-export const WORKLOADS: { id: string; label: string; detail: string }[] = [
-  { id: "training", label: "Training", detail: "multi-node runs" },
-  { id: "inference", label: "Inference", detail: "served endpoints" },
-  { id: "agents", label: "Agents", detail: "on-demand bursts" },
-  { id: "finetune", label: "Fine-tuning", detail: "short-lived jobs" },
-  { id: "notebooks", label: "Notebooks", detail: "interactive work" },
+export const WORKLOADS: { id: string; label: string }[] = [
+  { id: "training", label: "Training" },
+  { id: "inference", label: "Inference" },
+  { id: "agents", label: "Agents" },
+  { id: "finetune", label: "Fine-tuning" },
+  { id: "notebooks", label: "Notebooks" },
 ];
 
 export const GPU_TIERS: { id: Gpu["tier"]; label: string }[] = [
