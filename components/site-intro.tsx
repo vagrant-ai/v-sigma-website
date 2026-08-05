@@ -58,7 +58,7 @@ export function SiteIntro() {
           *below* the card titles it governs, so nothing said "heading". 15 and 18
           left the label band entirely: caps at 0.14em accumulate width fast, and
           past 14 they compound into something that reads as a second title
-          competing with the 26px h1 rather than as a divider between sections.
+          competing with the 30px h1 rather than as a divider between sections.
 
           It shares 14px with the card titles below it and stays distinct anyway —
           those are sentence case at 0.02em tracking, this is caps at 0.14em. On

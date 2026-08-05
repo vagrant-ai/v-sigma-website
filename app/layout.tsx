@@ -14,10 +14,18 @@ import "./globals.css";
  */
 
 /**
- * Orbitron — brand only: the wordmark and the slogan. It's a wide geometric
- * display face with near-uniform stroke and squared bowls, which is why it works
- * as a logotype and why body copy set in it is unreadable. Capped at 700; the
- * family goes to 900 but nothing here needs it.
+ * Orbitron — the product's own name only: the `v-sigma` wordmark in the header and
+ * the v-sigma unit in the diagram. It's a wide geometric display face with
+ * near-uniform stroke and squared bowls, which is why it works as a logotype and why
+ * body copy set in it is unreadable. Capped at 700; the family goes to 900 but
+ * nothing here needs it.
+ *
+ * Two rules, both learned by breaking them. This face is for copy that *names*
+ * something, not for copy that says something about it, however important the latter
+ * is — the slogan was set in it and isn't any more, because it's a sentence and reads
+ * as prose. And it's for *this* product's name: `Vagrant.ai` in the header was tried
+ * in it and reverted, since a credit line set in the product's logotype face reads as
+ * a second wordmark rather than as the attribution it is.
  */
 const orbitron = Orbitron({
   subsets: ["latin"],

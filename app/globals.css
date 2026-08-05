@@ -58,7 +58,10 @@
   --font-mono:
     var(--font-roboto-mono), ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco,
     "Cascadia Mono", Consolas, monospace;
-  /* Orbitron, for the wordmark and the slogan only. Not wired to `body`. */
+  /* Orbitron, for the product's own name only: the `v-sigma` wordmark and the
+     v-sigma unit in the diagram. Copy that names something takes this face; copy
+     that says something about it doesn't. Not wired to `body`, and no longer on the
+     slogan — that's a sentence, so it takes the text face. */
   --font-brand:
     var(--font-orbitron), "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
 }
