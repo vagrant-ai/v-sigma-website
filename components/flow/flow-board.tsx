@@ -154,8 +154,15 @@ export function FlowBoard({
 
   return (
     <>
-      {/* One source, one rank of edges, three panels. */}
-      <div ref={containerRef} className="relative pt-7">
+      {/* One source, one rank of edges, three panels.
+
+          No top padding of its own. The `pt-7` here was half of a pair — this and
+          the map's matching `mt-7` — that kept the two views from shifting the page
+          as a reader toggled between them. They're both in the document now, one
+          after the other, so there's nothing to keep level: `Board` owns the gap
+          above each figure, which is the only place that can size the seam between
+          them. */}
+      <div ref={containerRef} className="relative">
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
           width={size.width}

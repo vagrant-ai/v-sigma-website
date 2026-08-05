@@ -10,8 +10,14 @@ import {
   type ViewerOrigin,
 } from "@/lib/latency";
 import { REGIONS, sampleDistribution, summariseByArea, type RegionPresence } from "@/lib/regions";
-import { MAP_SIZE, project } from "@/lib/world-map";
-import { BORDER_PATH, LAND_PATH } from "@/lib/world-map-data";
+import { GRATICULE, MAP_SIZE, project } from "@/lib/world-map";
+// `BORDER_PATH` is exported alongside this and deliberately unused: the map used
+// to draw country boundaries inside the coastline, and they're gone. Against the
+// solid land fill a border either disappeared into it or, dark enough to read,
+// turned the continents into a political map — and this figure locates data
+// centres, so national subdivisions were detail it never needed. The coastline
+// and the dot texture carry the geography.
+import { LAND_PATH } from "@/lib/world-map-data";
 import { AvailabilityKey } from "./availability-key";
 import { GpuPicker } from "./gpu-picker";
 import { ProviderMark } from "./provider-icon";
@@ -82,9 +88,12 @@ export function GlobalView({
   const shown = active ?? fallback;
 
   return (
-    // Same gap below the toolbar as the providers view, so switching between
-    // them doesn't shift the content up or down.
-    <div className="mt-7">
+    // No top margin of its own. The `mt-7` here was half of a pair — this and the
+    // flow board's matching `pt-7` — that kept the two views from shifting the
+    // page as a reader toggled between them. Both figures live on one track now,
+    // so there's nothing to keep level: `Board` owns the gap above the figures,
+    // which is the only place that can size the seam.
+    <div>
       {/* `items-start` so the sidebar cards keep their natural height instead of
           stretching to match the map, which is much the taller of the two. */}
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_17rem]">
@@ -101,24 +110,60 @@ export function GlobalView({
 
           <svg
             viewBox={`0 0 ${MAP_SIZE.width} ${MAP_SIZE.height}`}
-            className="h-auto w-full"
+            className="h-auto w-full overflow-hidden rounded-md"
             role="img"
             aria-label={`Regions with ${gpu.name} capacity`}
           >
             <defs>
-              {/* Dot matrix over a flat wash, both clipped to the coastline.
-                  Dots alone were too sparse to read as continents — the wash
-                  carries the silhouette and the dots keep the mono, hairline
-                  texture the rest of the site uses; a solid fill would compete
-                  with the markers, which are the actual content.
+              {/* The ocean: a faint vertical wash, lighter at the equator than at
+                  the edges. The map used to sit on the card's own white, which
+                  left the figure with no field of its own — the land floated in
+                  the page and the frame's only edges were the card's. A tint this
+                  slight doesn't read as "blue water"; it reads as the extent of
+                  the map, which is what a reader needs to see the crop is
+                  deliberate rather than an image that failed to load. */}
+              <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--color-sigma)" stopOpacity="0.07" />
+                <stop offset="45%" stopColor="var(--color-sigma)" stopOpacity="0.035" />
+                <stop offset="100%" stopColor="var(--color-sigma)" stopOpacity="0.08" />
+              </linearGradient>
+
+              {/* Radial falloff on the active marker's halo. A flat disc at this
+                  size reads as a second, bigger dot — a gradient reads as glow,
+                  which is what distinguishes the selected site from the seventeen
+                  around it without changing its measured size. */}
+              <radialGradient id="marker-glow">
+                <stop offset="35%" stopColor="currentColor" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+              </radialGradient>
+
+              {/* Dot matrix over a solid land fill, both clipped to the
+                  coastline. Two layers because they do different jobs: the fill
+                  is what makes land read as land against the water, and the dots
+                  keep the mono, hairline texture the rest of the site uses.
+
+                  The fill was resisted for a long time on the grounds that it
+                  would compete with the markers. It doesn't, because it's
+                  neutral: the markers are the only *coloured* things on the map,
+                  so they separate from a grey field by hue rather than by
+                  contrast, and a grey they can be seen against is a grey that
+                  also gives the continents an actual shape. Dots over white had
+                  neither — no land/water step at all, just a texture that
+                  petered out near the coast.
 
                   Grid tightened from 2 to 1.4 units with proportionally smaller
-                  dots. The finer coastline resolves countries the size of
-                  Switzerland, and on a 2-unit grid those held one dot or none —
-                  so the texture broke up exactly where the new detail was worth
-                  seeing. Same ink coverage, three times the sample rate. */}
+                  dots. The finer coastline resolves islands and peninsulas only a
+                  degree or two across, and on a 2-unit grid those held one dot or
+                  none — so the texture broke up exactly where the detail was
+                  worth seeing. Same ink coverage, three times the sample rate. */}
               <pattern id="land-dots" width="1.4" height="1.4" patternUnits="userSpaceOnUse">
-                <circle cx="0.7" cy="0.7" r="0.3" fill="var(--color-mute)" opacity="0.45" />
+                {/* Texture only. The dots used to carry the silhouette on their
+                    own, which is why they kept having to get darker every time
+                    the field behind them changed — and a matrix that has to *be*
+                    the landmass can't also be subtle. Now that the land has a
+                    real fill under it, these are back to a light grain over the
+                    top, which is all they were ever good at. */}
+                <circle cx="0.7" cy="0.7" r="0.3" fill="var(--color-mute)" opacity="0.4" />
               </pattern>
               <clipPath id="land-clip">
                 {/* No transform: the generator already projects into this
@@ -129,33 +174,53 @@ export function GlobalView({
               </clipPath>
             </defs>
 
-            <g clipPath="url(#land-clip)">
-              <rect
-                width={MAP_SIZE.width}
-                height={MAP_SIZE.height}
-                fill="var(--color-ink-soft)"
-              />
-              <rect width={MAP_SIZE.width} height={MAP_SIZE.height} fill="url(#land-dots)" />
+            {/* Ocean first, so everything else sits on it. */}
+            <rect width={MAP_SIZE.width} height={MAP_SIZE.height} fill="url(#ocean)" />
 
-              {/* Country boundaries, clipped to land so the mesh's few
-                  coast-adjacent strays can't stroke out over open water.
-
-                  These are the reason to carry a finer source at all: a coastline
-                  says "somewhere in western Europe", a border says "Germany", and
-                  placing a region is the whole job of this figure. Drawn lighter
-                  than the coastline it sits inside — a border is a subdivision of
-                  land, so it should read as internal structure, not as an edge
-                  competing with the silhouette. */}
-              <path
-                d={BORDER_PATH}
-                fill="none"
-                stroke="var(--color-mute)"
-                strokeWidth={0.22}
-                strokeOpacity={0.4}
-                strokeLinejoin="round"
-                vectorEffect="non-scaling-stroke"
-              />
+            {/* Graticule, under the land rather than over it: a grid crossing the
+                dotted continents competed with the same texture the dots make,
+                and the lines are here to frame the figure, not to measure it.
+                Over open water they give the crop a scale — without them the map
+                had no cue that it was cropped at all. */}
+            <g stroke="var(--color-sigma)" strokeOpacity={0.1} strokeWidth={0.25}>
+              {GRATICULE.meridians.map((x) => (
+                <line key={`m${x}`} x1={x} x2={x} y1={0} y2={MAP_SIZE.height} />
+              ))}
+              {GRATICULE.parallels.map((y) => (
+                <line key={`p${y}`} x1={0} x2={MAP_SIZE.width} y1={y} y2={y} />
+              ))}
             </g>
+
+            <g clipPath="url(#land-clip)">
+              {/* Solid land, a step darker than the page and clearly distinct
+                  from the ocean tint. This is the fill that had to exist: with
+                  the land left white the figure had no land/water contrast at
+                  all — just a dot pattern that thinned out somewhere near the
+                  coast — so the continents read as an artefact rather than as
+                  shapes. Neutral grey rather than a tinted one, so the only hue
+                  in the water/land pair belongs to the water and the markers keep
+                  the map's entire colour budget. */}
+              <rect width={MAP_SIZE.width} height={MAP_SIZE.height} fill="#e4e9f2" />
+              <rect width={MAP_SIZE.width} height={MAP_SIZE.height} fill="url(#land-dots)" />
+            </g>
+
+            {/* The coastline, outside the clip so the stroke isn't halved by its
+                own clipping path. Drawn now that the land is lighter than the
+                sea: a dot matrix has no edge of its own — it just thins out — so
+                at the shore the continents faded into the water instead of
+                meeting it. This is the line that makes the silhouette definite,
+                and it's the only element that gets to be crisper than the dots
+                because everything else about the map's texture is deliberately
+                soft. */}
+            <path
+              d={LAND_PATH}
+              fill="none"
+              stroke="var(--color-mute)"
+              strokeWidth={0.3}
+              strokeOpacity={0.6}
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
 
             {/* Just the equator, and only across the ocean stretches — a rule
                 drawn over the dotted land competed with the same texture it was
@@ -349,11 +414,20 @@ function RegionMarker({
       {/* Generous transparent hit area — the visible dots are only a few pixels
           across at this scale, which is too small to reliably point at. */}
       <circle cx={x} cy={y} r={Math.max(r + 3, 5)} fill="transparent" />
+      {/* Glow on the selected site only, in its own availability colour, sized
+          well past the disc so it reads as emission rather than as a ring. This
+          is what marks the panel's subject on the map: before it, hovering
+          changed a fill opacity by 0.23 and a stroke by a third of a pixel,
+          which is invisible at 3px across, so the panel could describe a region
+          the reader couldn't find. `currentColor` feeds the gradient. */}
+      {active && (
+        <circle cx={x} cy={y} r={r + 5} fill="url(#marker-glow)" style={{ color: fill }} />
+      )}
       {/* Separation from neighbouring markers, as a stroke rather than a filled
           disc. Western Europe packs four metros into a few degrees, so without a
           gap the discs fuse into one blob — but the old version was an opaque
-          `surface` circle at r+0.5, which also erased the coastline and borders
-          underneath. A ring only spends ink where two markers actually touch,
+          `surface` circle at r+0.5, which also erased the coastline underneath.
+          A ring only spends ink where two markers actually touch,
           and now that the map has real geography in it that difference is the
           whole point: the backdrop stays visible through the gap. */}
       <circle
@@ -364,8 +438,8 @@ function RegionMarker({
         stroke="var(--color-surface)"
         strokeWidth={0.5}
       />
-      {/* Opaque body. The fill can't be translucent now — the dot matrix and
-          borders show through and muddle the colour, which is the marker's
+      {/* Opaque body. The fill can't be translucent now — the land fill and its
+          dot matrix show through and muddle the colour, which is the marker's
           availability channel and has to stay readable. */}
       <circle cx={x} cy={y} r={r} fill="var(--color-surface)" />
       <circle cx={x} cy={y} r={r} fill={fill} fillOpacity={active ? 0.55 : 0.32} />

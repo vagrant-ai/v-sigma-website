@@ -43,3 +43,29 @@ export function project(lon: number, lat: number): { x: number; y: number } {
     y: ((latMax - lat) / (latMax - latMin)) * MAP_SIZE.height,
   };
 }
+
+/**
+ * Meridians and parallels, as `x`/`y` values in viewBox units.
+ *
+ * Every 30° of longitude and 20° of latitude — coarse enough to read as a frame
+ * of reference rather than as graph paper. The equator is excluded from
+ * `parallels`: it's drawn separately, dashed, because it's the one line a reader
+ * can name, and it wants a different weight from the rest of the grid.
+ *
+ * Computed once at module load rather than per render. The bounds are constants,
+ * so these values can never change.
+ */
+export const GRATICULE = {
+  meridians: range(-150, 150, 30).map((lon) => project(lon, 0).x),
+  parallels: range(MAP_BOUNDS.latMin + 20, MAP_BOUNDS.latMax - 20, 20)
+    .filter((lat) => lat !== 0)
+    .map((lat) => project(0, lat).y),
+};
+
+/** Inclusive numeric range with a step, for the graticule above. */
+function range(from: number, to: number, step: number): number[] {
+  const out: number[] = [];
+  for (let v = from; v <= to; v += step) out.push(v);
+  return out;
+}
+
