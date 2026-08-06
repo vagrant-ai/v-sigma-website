@@ -164,7 +164,7 @@ export function SiteIntro() {
 const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
   {
     title: "Kubernetes Native",
-    body: "Annotations only for integration. The same Kubernetes experience as before.",
+    body: "GPU provisioning is as simple as defining Kubernetes labels.",
     icon: (
       <IconTile>
         <KubernetesMark />
@@ -173,7 +173,7 @@ const FEATURES: { title: string; body: ReactNode; icon: ReactNode }[] = [
   },
   {
     title: "One API, Run Everywhere",
-    body: "Hyperscalers, neoclouds and self-managed infrastructure behind a single interface.",
+    body: "Hyperscalers, Neoclouds and self-managed infrastructure behind a single interface.",
     icon: (
       <IconTile>
         <ConvergeGlyph />
